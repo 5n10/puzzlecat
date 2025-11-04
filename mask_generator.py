@@ -55,7 +55,7 @@ def main():
     charset = default_charset
 
     # Allow overriding from the command line for flexibility
-    # Usage: python mask_generator.py [length] [charset] [--diversity] [--min-score SCORE]
+    # Usage: python mask_generator.py [length] [charset] [--diversity] [min_score]
     use_diversity = False
     min_score = 0.0
     
@@ -71,12 +71,13 @@ def main():
     if len(sys.argv) > 3 and sys.argv[3] == '--diversity':
         use_diversity = True
         print("Diversity filtering enabled", file=sys.stderr)
-    
-    if len(sys.argv) > 4 and sys.argv[3] == '--diversity':
-        try:
-            min_score = float(sys.argv[4])
-        except ValueError:
-            print(f"Error: Invalid min-score. Using default: 0.0", file=sys.stderr)
+        
+        # Parse min_score if provided
+        if len(sys.argv) > 4:
+            try:
+                min_score = float(sys.argv[4])
+            except ValueError:
+                print(f"Error: Invalid min-score. Using default: 0.0", file=sys.stderr)
 
     print(f"Generating passwords of length {length} from charset '{charset}'...", file=sys.stderr)
 

@@ -6,7 +6,6 @@ It ensures passwords have good distribution of different character types and
 avoids weak patterns like sequential characters or excessive repetition.
 """
 
-import re
 from typing import Dict, List, Tuple
 
 
