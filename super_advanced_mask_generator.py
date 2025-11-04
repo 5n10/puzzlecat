@@ -485,10 +485,14 @@ def generate_enhanced_diversity_patterns(wordlist_path=None, min_score=70.0, use
     Generate passwords with enhanced character diversity patterns.
     
     This uses the diversity_patterns module to ensure:
-    - Proper distribution of character types
-    - No excessive repetition
-    - No sequential patterns
-    - Good positional diversity
+    - Proper distribution of character types (uppercase, lowercase, digits, special)
+    - No excessive repetition (same character repeated > 2 times)
+    - No sequential patterns (abc, 123, qwerty, etc.)
+    - Good positional diversity (character types not clustered together)
+    
+    Positional diversity means avoiding consecutive characters of the same type.
+    For example, "AAAA1111!!!!" has poor positional diversity, while
+    "A1a!A2b@" has good positional diversity with types well-distributed.
     
     :param wordlist_path: Optional wordlist for base words
     :param min_score: Minimum diversity score (0-100)

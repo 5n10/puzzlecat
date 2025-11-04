@@ -96,8 +96,11 @@ def has_sequential_pattern(password: str, min_length: int = 3) -> bool:
     
     # Check common keyboard sequences
     keyboard_patterns = [
+        # Standard QWERTY keyboard rows
         'qwerty', 'asdfgh', 'zxcvbn',
-        'qwertz', 'azerty',  # International keyboards
+        # International keyboard layouts
+        'qwertz', 'azerty',
+        # Common special character sequences
         '!@#$%', '(){}[]'
     ]
     
@@ -234,7 +237,9 @@ def calculate_diversity_score(password: str) -> float:
             # Perfect balance would be all types equal
             avg_ratio = sum(type_ratios) / len(type_ratios)
             variance = sum((r - avg_ratio) ** 2 for r in type_ratios) / len(type_ratios)
-            balance_score = max(0, 1 - (variance * 10))
+            # Scale variance (typical values 0-0.1) to 0-1 range for scoring
+            VARIANCE_SCALE_FACTOR = 10
+            balance_score = max(0, 1 - (variance * VARIANCE_SCALE_FACTOR))
             score += balance_score * 20
     
     # No excessive repetition (20 points)
