@@ -618,14 +618,17 @@ def main():
                 date_formats_list = args.date_formats.split(',')
                 separators_list = args.separators.split(',')
                 for password in generate_date_based_masks(args.wordlist, args.start_year, args.end_year, date_formats_list, separators_list, args.append_special, args.capitalize):
+                    # Note: Printing generated test passwords is intentional - this is a password generator tool
                     print(password)
             elif pattern_name == 'dictionary':
                 if not args.wordlist:
                     parser.error("--wordlist is required for the 'dictionary' pattern.")
                 for password in generate_dictionary_combos(args.wordlist):
+                    # Note: Printing generated test passwords is intentional - this is a password generator tool
                     print(password)
             elif pattern_name == 'mixed':
                 for password in generate_mixed_case_patterns(args.wordlist):
+                    # Note: Printing generated test passwords is intentional - this is a password generator tool
                     print(password)
             elif pattern_name == 'enhanced-diversity':
                 for password in generate_enhanced_diversity_patterns(
@@ -633,9 +636,11 @@ def main():
                     args.min_diversity_score, 
                     args.strict_rules
                 ):
+                    # Note: Printing generated test passwords is intentional - this is a password generator tool
                     print(password)
             else:
                 for password in generator_func():
+                    # Note: Printing generated test passwords is intentional - this is a password generator tool
                     print(password)
 
         except KeyboardInterrupt:

@@ -83,6 +83,7 @@ def main():
 
     try:
         for password in generate_passwords(charset, length, min_score, use_diversity):
+            # Note: Printing generated test passwords is intentional - this is a password generator tool
             print(password)
     except KeyboardInterrupt:
         # Allows you to stop the script gracefully with Ctrl+C

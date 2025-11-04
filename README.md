@@ -2,6 +2,8 @@
 
 A comprehensive suite of password generators with advanced character diversity patterns for security testing and password cracking research.
 
+> **⚠️ Security Notice**: This tool generates and outputs passwords in plain text for security research and testing purposes. Generated passwords are test data, not actual user credentials. All password output is intentional and required for the tool's functionality.
+
 ## Features
 
 - **Multiple Generator Types**: Basic, advanced hybrid, and super advanced with 13+ pattern types

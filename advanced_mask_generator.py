@@ -86,6 +86,7 @@ def main():
 
     try:
         for password in generate_hybrid_passwords(args.wordlist, args.mask):
+            # Note: Printing generated test passwords is intentional - this is a password generator tool
             print(password)
     except KeyboardInterrupt:
         print("\nPassword generation stopped.", file=sys.stderr)

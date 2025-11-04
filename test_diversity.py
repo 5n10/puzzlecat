@@ -32,6 +32,7 @@ def test_analysis():
     for pwd in test_passwords:
         counts = analyze_character_types(pwd)
         score = calculate_diversity_score(pwd)
+        # Note: These are test passwords for demonstration purposes, not real user passwords
         print(f"\nPassword: {pwd}")
         print(f"  Uppercase: {counts['uppercase']}, Lowercase: {counts['lowercase']}")
         print(f"  Digits: {counts['digits']}, Special: {counts['special']}")
