@@ -2,6 +2,12 @@ import argparse
 import sys
 import itertools
 from datetime import date, timedelta
+from diversity_patterns import (
+    DiversityRule, 
+    validate_diversity, 
+    calculate_diversity_score,
+    enhance_diversity
+)
 
 # ================================================================
 # TIER 1: DATE-BASED PATTERNS
@@ -471,6 +477,85 @@ def generate_mixed_case_patterns(wordlist_path=None):
                             yield candidate
 
 # ================================================================
+# TIER 13: ENHANCED DIVERSITY PATTERNS
+# ================================================================
+
+def generate_enhanced_diversity_patterns(wordlist_path=None, min_score=70.0, use_strict_rules=False):
+    """
+    Generate passwords with enhanced character diversity patterns.
+    
+    This uses the diversity_patterns module to ensure:
+    - Proper distribution of character types
+    - No excessive repetition
+    - No sequential patterns
+    - Good positional diversity
+    
+    :param wordlist_path: Optional wordlist for base words
+    :param min_score: Minimum diversity score (0-100)
+    :param use_strict_rules: Whether to use strict diversity validation
+    """
+    sys.stderr.write("[*] Generating enhanced diversity patterns...\n")
+    
+    defaults = [
+        'secure', 'crypto', 'wallet', 'bitcoin', 'guardian', 'vault', 'fortress',
+        'shield', 'protect', 'defend', 'safety', 'privacy', 'liberty', 'master'
+    ]
+    
+    words = defaults
+    if wordlist_path:
+        try:
+            with open(wordlist_path, 'r') as f:
+                loaded = [line.strip() for line in f if line.strip() and len(line.strip()) >= 4]
+                if loaded:
+                    words = loaded[:100]  # Limit for performance
+        except FileNotFoundError:
+            sys.stderr.write(f"[!] Wordlist not found, using defaults\n")
+    
+    number_sets = ['123', '321', '007', '2024', '8675', '1337']
+    special_sets = ['!', '@', '#', '$', '!@', '@#', '#$']
+    patterns = ['mixed', 'sandwich', 'alternating', 'distributed']
+    
+    # Define diversity rule
+    rule = DiversityRule(
+        min_uppercase=1,
+        min_lowercase=1,
+        min_digits=1,
+        min_special=1,
+        max_consecutive_same_type=3,
+        max_repeated_char=2,
+        avoid_sequential=True
+    )
+    
+    seen = set()
+    
+    for word in words:
+        base = word.strip()
+        if not base or len(base) < 4:
+            continue
+        
+        for numbers in number_sets:
+            for special in special_sets:
+                for pattern in patterns:
+                    variations = enhance_diversity(base, numbers, special, pattern)
+                    
+                    for candidate in variations:
+                        if candidate in seen:
+                            continue
+                        
+                        # Calculate diversity score
+                        score = calculate_diversity_score(candidate)
+                        
+                        if score >= min_score:
+                            # Optionally validate with strict rules
+                            if use_strict_rules:
+                                is_valid, _ = validate_diversity(candidate, rule)
+                                if not is_valid:
+                                    continue
+                            
+                            seen.add(candidate)
+                            yield candidate
+
+# ================================================================
 # MAIN GENERATION LOGIC
 # ================================================================
 
@@ -488,6 +573,7 @@ def main():
         'years': generate_year_combinations,
         'dictionary': generate_dictionary_combos,
         'mixed': generate_mixed_case_patterns,
+        'enhanced-diversity': generate_enhanced_diversity_patterns,
     }
 
     parser = argparse.ArgumentParser(
@@ -506,6 +592,12 @@ def main():
     parser.add_argument('--separators', type=str, default="", help="Separators for 'dates'.")
     parser.add_argument('--append-special', type=str, default="!@#$", help="Special characters to append for 'dates'.")
     parser.add_argument('--capitalize', action='store_true', help="Capitalize words for 'dates'.")
+    
+    # Arguments for 'enhanced-diversity' pattern
+    parser.add_argument('--min-diversity-score', type=float, default=70.0, 
+                        help="Minimum diversity score for 'enhanced-diversity' (0-100, default 70).")
+    parser.add_argument('--strict-rules', action='store_true', 
+                        help="Use strict diversity validation rules for 'enhanced-diversity'.")
 
     args = parser.parse_args()
 
@@ -530,6 +622,13 @@ def main():
                     print(password)
             elif pattern_name == 'mixed':
                 for password in generate_mixed_case_patterns(args.wordlist):
+                    print(password)
+            elif pattern_name == 'enhanced-diversity':
+                for password in generate_enhanced_diversity_patterns(
+                    args.wordlist, 
+                    args.min_diversity_score, 
+                    args.strict_rules
+                ):
                     print(password)
             else:
                 for password in generator_func():
