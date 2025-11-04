@@ -1,0 +1,7 @@
+password
+admin
+secret
+123456
+qwerty
+sunshine
+love
