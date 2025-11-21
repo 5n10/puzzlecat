@@ -71,17 +71,7 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
 
     sha256_final (&ctx_sha);
 
-    if (printout) {
-    printf("sha1 results a0: ");
-    print_u32_array_as_hex(ctx_sha.h, 8);
-    }
-    // convert password from b58 to binary
     u32 tmp[16] = { 0 };
-
-    //const bool status_dec = b58dec_51 (tmp, ctx_sha.h);
-
-
-    
 
 
     // verify sha256 (sha256 (tmp[0..37 - 4]))
