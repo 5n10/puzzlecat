@@ -26,12 +26,9 @@ static const u32   OPTI_TYPE         = OPTI_TYPE_NOT_SALTED;
 static const u64   OPTS_TYPE         = OPTS_TYPE_PT_GENERATE_LE;
 static const u32   SALT_TYPE         = SALT_TYPE_NONE;
 static const char *ST_PASS           = "hashcat";
-//static const char *ST_HASH           = "7f67c2c704bc1eac097fed3bf31963a8f817bfc3";
 static const char *ST_HASH           = "1Ccf7nyWhoQGqX5T5xxzNJ77oUdruP2KRx";
 static const char *BENCHMARK_MASK    = "ha?1?1?1?1?1";
 static const char *BENCHMARK_CHARSET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-//static const u32   PUBKEY_MAXLEN     = 64; // our max is actually always 25 (21 + 4)
-//static const u32   WIF_LEN           = 52;
 
 
 
@@ -66,38 +63,6 @@ u64 module_tmp_size (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED c
 
   return tmp_size;
 }
-
-void print_u32_array_as_chars(u32 *array, int size) {
-    for (size_t i = 0; i < size; i++) {
-        // Extract each byte from the 32-bit integer
-        char c1 = (array[i] >> 24) & 0xFF;
-        char c2 = (array[i] >> 16) & 0xFF;
-        char c3 = (array[i] >> 8) & 0xFF;
-        char c4 = array[i] & 0xFF;
-
-        // Print each character
-        printf("%c%c%c%c", c1, c2, c3, c4);
-    }
-    printf("\n"); // Print a newline at the end
-}
-
-void print_u32_array_as_hex(u32 *array, int size) {
-    if (array == NULL || size <= 0) {
-        printf("Invalid array or size.\n");
-        return;
-    }
-
-    for (int i = 0; i < size; i++) {
-        u8 byte1 = (array[i] >> 24) & 0xFF;
-        u8 byte2 = (array[i] >> 16) & 0xFF;
-        u8 byte3 = (array[i] >> 8) & 0xFF;
-        u8 byte4 = array[i] & 0xFF;
-
-        printf("%02X %02X %02X %02X ", byte1, byte2, byte3, byte4);
-    }
-    printf("\n");
-}
-
 
 u32 module_pw_max (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const user_options_t *user_options, MAYBE_UNUSED const user_options_extra_t *user_options_extra)
 {
@@ -165,59 +130,12 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
     digest[i] = pubkey[PUBKEY_MAXLEN - pubkey_len + i + 1];
   }
 
-
-      printf("Digest: %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n", 
-       digest[0], digest[1], digest[2], digest[3], digest[4], 
-       digest[5], digest[6], digest[7], digest[8], digest[9], 
-       digest[10], digest[11], digest[12], digest[13], digest[14], 
-       digest[15], digest[16], digest[17], digest[18], digest[19]);
-
-
-
-
-  return (PARSER_OK); 
-
-  
-  /*
-  //RIPMD implementation below
-   u32 *digest = (u32 *) digest_buf;
-
-  hc_token_t token;
-
-  token.token_cnt  = 1;
-
-  token.len_min[0] = 40;
-  token.len_max[0] = 40;
-  token.attr[0]    = TOKEN_ATTR_VERIFY_LENGTH
-                   | TOKEN_ATTR_VERIFY_HEX;
-
-  const int rc_tokenizer = input_tokenizer ((const u8 *) line_buf, line_len, &token);
-
-  if (rc_tokenizer != PARSER_OK) return (rc_tokenizer);
-
-  const u8 *hash_pos = token.buf[0];
-
-  digest[0] = hex_to_u32 (hash_pos +  0);
-  digest[1] = hex_to_u32 (hash_pos +  8);
-  digest[2] = hex_to_u32 (hash_pos + 16);
-  digest[3] = hex_to_u32 (hash_pos + 24);
-  digest[4] = hex_to_u32 (hash_pos + 32);
-
-
-
-
-      printf("Digest-160: %u %u %u %u %u\n", 
-       digest[0], digest[1], digest[2], digest[3], digest[4]);
-
-
-  return (PARSER_OK);*/
-
+  return (PARSER_OK);
 }
 
 
 int module_hash_encode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSED const void *digest_buf, MAYBE_UNUSED const salt_t *salt, MAYBE_UNUSED const void *esalt_buf, MAYBE_UNUSED const void *hook_salt_buf, MAYBE_UNUSED const hashinfo_t *hash_info, char *line_buf, MAYBE_UNUSED const int line_size)
 {
-  printf("\n\n encode \n\n");
   u8 *digest = (u8 *) digest_buf;
 
   u8 buf[64] = { 0 };
