@@ -42,19 +42,45 @@ Example target hashes are provided in the `targets/` directory:
 - `targets/hashes-uc.hashes` - Uncompressed address targets for module 01337
 - `targets/hashes-c.hashes` - Compressed address targets for module 01338
 
-## Usage
+## Installation & Usage
 
-These modules are designed to be used with hashcat. Place the module files in the appropriate hashcat directories:
-- C modules go in the `src/modules/` directory
-- OpenCL kernels go in the `OpenCL/` directory
+### Installing into Hashcat
 
-Example hashcat command:
+1. **Copy module files** to your hashcat installation:
+   ```bash
+   # Copy C modules
+   cp custom-module/module_01337.c /path/to/hashcat/src/modules/
+   cp custom-module/module_01338.c /path/to/hashcat/src/modules/
+   
+   # Copy OpenCL kernels
+   cp custom-kernel/m01337-pure.cl /path/to/hashcat/OpenCL/
+   cp custom-kernel/m01338-pure.cl /path/to/hashcat/OpenCL/
+   ```
+
+2. **Rebuild hashcat** to include the custom modules:
+   ```bash
+   cd /path/to/hashcat
+   make clean
+   make
+   ```
+
+### Running with GPU Acceleration
+
+The modules automatically use GPU acceleration via OpenCL. All expensive operations (SHA-256, SECP256k1 elliptic curve math, RIPEMD-160) run on the GPU.
+
+Example hashcat commands:
 ```bash
-# For uncompressed addresses
+# For uncompressed addresses (module 1337)
 hashcat -m 1337 -a 3 hashes-uc.hashes ?a?a?a?a?a?a?a?a
 
-# For compressed addresses
+# For compressed addresses (module 1338)
 hashcat -m 1338 -a 3 hashes-c.hashes ?a?a?a?a?a?a?a?a
+
+# Use specific GPU devices
+hashcat -m 1337 -d 1,2 -a 3 hashes-uc.hashes ?a?a?a?a?a?a
+
+# Monitor GPU workload
+hashcat -m 1337 -I --benchmark
 ```
 
 ## Technical Details
@@ -62,8 +88,10 @@ hashcat -m 1338 -a 3 hashes-c.hashes ?a?a?a?a?a?a?a?a
 - **Algorithm**: SECP256k1 elliptic curve cryptography
 - **Hash Functions**: SHA-256, RIPEMD-160
 - **Encoding**: Base58Check
-- **Attack Mode**: Outside kernel (CPU-side validation)
+- **Attack Mode**: Outside kernel (GPU computation with CPU-side Base58Check validation)
 - **Password Length**: 1-64 characters
+- **GPU Acceleration**: SHA-256, SECP256k1 point multiplication, and RIPEMD-160 all run on GPU
+- **Performance**: Scales with GPU compute capability (CUDA cores/Stream processors)
 
 ## License
 
