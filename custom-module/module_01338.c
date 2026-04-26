@@ -142,9 +142,6 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
     npubkey_ptr[i] = pubkey[j];
   }
 
-  // if (b58check   (npubkey_ptr, pubkey_len) == false) return (PARSER_HASH_ENCODING);
-  // if (b58check64 (npubkey,     pubkey_len) == false) return (PARSER_HASH_ENCODING);
-
   if (b58check_25 (npubkey) == false) return (PARSER_HASH_ENCODING);
 
 
