@@ -49,7 +49,7 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
 
   u32 w[64] = { 0 };
 
-  secp256k1_t preG; // need to change SECP256K1_TMPS_TYPE above to: PRIVATE_AS
+  secp256k1_t preG = { 0 };
 
   set_precomputed_basepoint_g (&preG);
 
@@ -63,7 +63,7 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
     w[idx] = pws[gid].i[idx];
   }
 
-    sha256_ctx_t ctx_sha;
+    sha256_ctx_t ctx_sha = { 0 };
 
     sha256_init (&ctx_sha);
 
@@ -78,7 +78,7 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
     // real work is done in b58check where sha256 is run twice
 
 
-    u32 prv_key[9];
+    u32 prv_key[9] = { 0 };
 
     prv_key[0] = ctx_sha.h[7];
     prv_key[1] = ctx_sha.h[6];
@@ -89,8 +89,8 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
     prv_key[6] = ctx_sha.h[1];
     prv_key[7] = ctx_sha.h[0];
 
-    u32 x[8];
-    u32 y[8];
+    u32 x[8] = { 0 };
+    u32 y[8] = { 0 };
 
     point_mul_xy (x, y, prv_key, &preG);
 
@@ -108,7 +108,7 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
     pub_key[1] = (x[6] >> 8) | (x[7] << 24);
     pub_key[0] = (x[7] >> 8) | (type << 24);
 
-    sha256_ctx_t ctx;
+    sha256_ctx_t ctx = { 0 };
 
     sha256_init   (&ctx);
     sha256_update (&ctx, pub_key, 33);
@@ -131,7 +131,7 @@ KERNEL_FQ void m01338_init (KERN_ATTR_TMPS (brainwallet_tmp_t))
     tmp[14] = 0;
     tmp[15] = 0;
 
-    ripemd160_ctx_t rctx;
+    ripemd160_ctx_t rctx = { 0 };
 
     ripemd160_init        (&rctx);
     ripemd160_update_swap (&rctx, tmp, 32);
@@ -175,7 +175,7 @@ KERNEL_FQ void m01338_comp (KERN_ATTR_TMPS (brainwallet_tmp_t))
 
   #define il_pos 0
 
-  u32 digest_tp[4];
+  u32 digest_tp[4] = { 0 };
 
 digest_tp[0] = r0;
 digest_tp[1] = r1;
