@@ -10,6 +10,7 @@
 #include "convert.h"
 #include "shared.h"
 #include "memory.h"
+#include <string.h>
 
 #include "emu_inc_hash_base58.h"
 
@@ -137,10 +138,7 @@ int module_hash_decode (MAYBE_UNUSED const hashconfig_t *hashconfig, MAYBE_UNUSE
 
   u8 *npubkey_ptr = (u8 *) npubkey;
 
-  for (u32 i = 0, j = PUBKEY_MAXLEN - pubkey_len; i < pubkey_len; i++, j++)
-  {
-    npubkey_ptr[i] = pubkey[j];
-  }
+  memcpy(npubkey_ptr, &pubkey[PUBKEY_MAXLEN - pubkey_len], pubkey_len);
 
   // if (b58check   (npubkey_ptr, pubkey_len) == false) return (PARSER_HASH_ENCODING);
   // if (b58check64 (npubkey,     pubkey_len) == false) return (PARSER_HASH_ENCODING);
