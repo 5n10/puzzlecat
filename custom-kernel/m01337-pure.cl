@@ -19,7 +19,6 @@
 #include M2S(INCLUDE_PATH/inc_hash_sha256.cl)
 #include M2S(INCLUDE_PATH/inc_hash_ripemd160.cl)
 #include M2S(INCLUDE_PATH/inc_ecc_secp256k1.cl)
-#include M2S(INCLUDE_PATH/inc_hash_md5.cl)
 
 #endif
 
